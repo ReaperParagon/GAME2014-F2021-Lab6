@@ -36,18 +36,26 @@ public class PlayerBehaviour : MonoBehaviour
             var y = Input.GetAxisRaw("Vertical");
             float jump = Input.GetAxisRaw("Jump");
 
-            // Check for flip
-            if (x != 0)
-            {
-                x = FlipAnimation(x);
-            }
-
             Vector2 worldTouch = new Vector2();
 
             // Touch Input
             foreach (var touch in Input.touches)
             {
                 worldTouch = Camera.main.ScreenToWorldPoint(touch.position);
+            }
+
+            // Check if touch on the right side / left side and top of the screen for movement right / left and jumping
+            if (worldTouch.x > 0)
+                x = 1;
+            if (worldTouch.x < 0)
+                x = -1;
+            if (worldTouch.y > 0)
+                jump = 1;
+
+            // Check for flip
+            if (x != 0)
+            {
+                x = FlipAnimation(x);
             }
 
             var horizontalMoveForce = x * horizontalForce;
