@@ -36,6 +36,12 @@ public class PlayerBehaviour : MonoBehaviour
             var y = Input.GetAxisRaw("Vertical");
             float jump = Input.GetAxisRaw("Jump");
 
+            // Check for flip
+            if (x != 0)
+            {
+                x = FlipAnimation(x);
+            }
+
             Vector2 worldTouch = new Vector2();
 
             // Touch Input
@@ -44,8 +50,8 @@ public class PlayerBehaviour : MonoBehaviour
                 worldTouch = Camera.main.ScreenToWorldPoint(touch.position);
             }
 
-            var horizontalMoveForce = x * horizontalForce; // * Time.deltaTime;
-            var jumpMoveForce = jump * verticalForce; // * Time.deltaTime;
+            var horizontalMoveForce = x * horizontalForce;
+            var jumpMoveForce = jump * verticalForce;
 
             float mass = rigidBody.mass * rigidBody.gravityScale;
 
@@ -59,6 +65,16 @@ public class PlayerBehaviour : MonoBehaviour
         RaycastHit2D hit = Physics2D.CircleCast(groundOrigin.position, groundRadius, Vector2.down, groundRadius, groundLayerMask);
 
         isGrounded = (hit) ? true : false;
+    }
+
+    private float FlipAnimation(float x)
+    {
+        // Scale x-axis based on direction
+        x = (x > 0) ? 1 : -1;
+
+        transform.localScale = new Vector3(x, 1.0f);
+
+        return x;
     }
 
     private void OnDrawGizmos()
